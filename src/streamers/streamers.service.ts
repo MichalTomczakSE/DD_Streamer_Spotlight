@@ -12,7 +12,7 @@ import {
     UpdatedStreamerData
 } from "../types";
 import fs from "fs/promises";
-import path from "path";
+import * as path from "path";
 import {storageDir} from "../utils/storage";
 
 @Injectable()

@@ -16,16 +16,14 @@ interface WebSocketVoteBody {
             origin: "*"
         }
 })
-export class VotesGateway implements OnModuleInit{
+export class VotesGateway {
     constructor(private readonly streamersService: StreamersService) {
     }
 
     @WebSocketServer()
     server: Server;
 
-    onModuleInit() {
-        this.server.on("connection", socket => console.log(socket.id, "connected"));
-    }
+
     @SubscribeMessage("newVote")
     async onNewVote(@MessageBody() body: WebSocketVoteBody): Promise<GetStreamersData> {
         this.server.emit("onVote", await this.streamersService.update(body.id, body.vote));
