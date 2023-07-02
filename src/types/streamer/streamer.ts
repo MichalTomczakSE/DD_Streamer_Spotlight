@@ -12,8 +12,11 @@ export interface GetOneStreamerFullData {
     description: string,
     upVotes: number,
     downVotes: number,
+    imageFn: string,
 }
 
-export type GetStreamersData = Omit<GetOneStreamerFullData, "description">
+export type OneStreamerData = Omit<GetOneStreamerFullData, "imageFn">
+
+export type GetStreamersData = Omit<GetOneStreamerFullData, "description" | "imageFn">
 
 export type UpdatedStreamerData = Pick<GetOneStreamerFullData, "id" | "upVotes" | "downVotes">
