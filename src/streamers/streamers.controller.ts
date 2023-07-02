@@ -14,9 +14,7 @@ import {StreamersService} from './streamers.service';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {GetStreamersData, MulterDiskUploadedFiles, OneStreamerData, UpdatedStreamerData} from "../types";
-import {FileFieldsInterceptor} from "@nestjs/platform-express";
-import {multerStorage, storageDir} from "../../utils/storage";
-import * as path from "path";
+import {ApiImage} from "../../decorators/api-image-decorator";
 
 @Controller('streamers')
 export class StreamersController {
@@ -24,14 +22,7 @@ export class StreamersController {
     }
 
     @Post()
-    @UseInterceptors(FileFieldsInterceptor([
-                {
-                    name: "image",
-                    maxCount: 1
-                }
-            ], {storage: multerStorage(path.join(storageDir(), "streamer-images"))}
-        )
-    )
+    @ApiImage()
     create(@Body() req: CreateStreamerDto,
            @UploadedFiles() file: MulterDiskUploadedFiles): Promise<GetStreamersData | BadRequestException> {
         return this.streamersService.create(req, file);
