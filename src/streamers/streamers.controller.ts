@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Put} from '@nestjs/common';
 import { StreamersService } from './streamers.service';
 import { CreateStreamerDto } from './dto/create-streamer.dto';
 import { UpdateStreamerDto } from './dto/update-streamer.dto';
@@ -22,13 +22,9 @@ export class StreamersController {
     return this.streamersService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id/vote')
   update(@Param('id') id: string, @Body() updateStreamerDto: UpdateStreamerDto) {
     return this.streamersService.update(+id, updateStreamerDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.streamersService.remove(+id);
-  }
 }
