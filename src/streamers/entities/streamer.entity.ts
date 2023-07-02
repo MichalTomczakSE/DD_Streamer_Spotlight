@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {Platform} from "../../types";
 
 @Entity()
 export class Streamer {
@@ -29,7 +30,7 @@ export class Streamer {
         length: 7,
         nullable: false
     })
-    platform: string;
+    platform: Platform;
 
     @ApiProperty({
         description: "Short description about content creator",
