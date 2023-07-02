@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateStreamerDto } from './create-streamer.dto';
+import {IsNumber, IsOptional} from "class-validator";
 
-export class UpdateStreamerDto extends PartialType(CreateStreamerDto) {}
+export class UpdateStreamerDto {
+
+    @IsOptional()
+    @IsNumber()
+    upVotes: number = 0;
+
+    @IsOptional()
+    @IsNumber()
+    downVotes: number = 0;
+
+}
