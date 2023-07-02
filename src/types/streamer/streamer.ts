@@ -5,7 +5,7 @@ export type Platform =
     | "Rumble"
     | "TikTok"
 
-export interface GetStreamerData {
+export interface GetOneStreamerFullData {
     id: string,
     username: string,
     platform: Platform,
@@ -14,6 +14,6 @@ export interface GetStreamerData {
     downVotes: number,
 }
 
-export type GetStreamersData = Omit<GetStreamerData, "description">
+export type GetStreamersData = Omit<GetOneStreamerFullData, "description">
 
-export type UpdatedStreamerData = Pick<GetStreamerData, "id" | "upVotes" | "downVotes">
+export type UpdatedStreamerData = Pick<GetOneStreamerFullData, "id" | "upVotes" | "downVotes">
