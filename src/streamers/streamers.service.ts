@@ -1,30 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { CreateStreamerDto } from './dto/create-streamer.dto';
-import { UpdateStreamerDto } from './dto/update-streamer.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateStreamerDto} from './dto/create-streamer.dto';
+import {UpdateStreamerDto} from './dto/update-streamer.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Streamer} from "./entities/streamer.entity";
+import {Repository} from "typeorm";
 
 @Injectable()
 export class StreamersService {
-  create(createStreamerDto: CreateStreamerDto) {
-    return 'This action adds a new streamer';
-  }
+    constructor(
+        @InjectRepository(Streamer) private streamersRepository: Repository<Streamer>
+    ) {}
 
-  findAll() {
-    return `This action returns all streamers`;
-  }
+    create(createStreamerDto: CreateStreamerDto) {
+        return 'This action adds a new streamer';
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} streamer`;
-  }
+    findAll() {
+        return `This action returns all streamers`;
+    }
 
-  update(id: number, updateStreamerDto: UpdateStreamerDto) {
-    return `This action updates a #${id} streamer`;
-  }
+    findOne(id: number) {
+        return `This action returns a #${id} streamer`;
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} streamer`;
-  }
+    update(id: number, updateStreamerDto: UpdateStreamerDto) {
+        return `This action updates a #${id} streamer`;
+    }
+
+    remove(id: number) {
+        return `This action removes a #${id} streamer`;
+    }
 
     getImage(id: string, res: any) {
-        
+
     }
 }
