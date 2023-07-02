@@ -13,31 +13,31 @@ import {
 import {StreamersService} from './streamers.service';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
-import {GetStreamerData, GetStreamersData, UpdatedStreamerData} from "../types";
+import { GetStreamersData, OneStreamerData, UpdatedStreamerData} from "../types";
 
 @Controller('streamers')
 export class StreamersController {
     constructor(private readonly streamersService: StreamersService) {
     }
 
-    @Post()
-    create(@Body() req: CreateStreamerDto): Promise<GetStreamerData | BadRequestException> {
-        return;
+    @Post('/')
+    create(@Body() req: CreateStreamerDto): Promise<GetStreamersData | BadRequestException> {
+        return this.streamersService.create(req)
     }
 
-    @Get()
+    @Get('/')
     findAll(): Promise<GetStreamersData[] | NotFoundException> {
-        return;
+        return this.streamersService.findAll();
     }
 
     @Get(':id')
-    findOne(@Param('id', ParseUUIDPipe) id: string): Promise<GetStreamerData | NotFoundException> {
-        return;
+    findOne(@Param('id', ParseUUIDPipe) id: string): Promise<OneStreamerData | NotFoundException> {
+        return this.streamersService.findOne(id);
     }
 
     @Put(':id/vote')
     update(@Param('id', ParseUUIDPipe) id: string, @Body() req: UpdateStreamerDto): Promise<UpdatedStreamerData | BadRequestException> {
-        return;
+        return this.streamersService.update(id, req);
     }
 
     @Get("/image/:id")
