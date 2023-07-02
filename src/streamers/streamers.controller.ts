@@ -15,7 +15,7 @@ import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {GetStreamersData, MulterDiskUploadedFiles, OneStreamerData, UpdatedStreamerData} from "../types";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
-import {multerStorage} from "../../utils/storage";
+import {multerStorage, storageDir} from "../../utils/storage";
 import * as path from "path";
 
 @Controller('streamers')
@@ -29,7 +29,7 @@ export class StreamersController {
                     name: "image",
                     maxCount: 1
                 }
-            ], {storage: multerStorage(path.join(__dirname,"../../images", "streamer-images"))}
+            ], {storage: multerStorage(path.join(storageDir(), "streamer-images"))}
         )
     )
     create(@Body() req: CreateStreamerDto,
