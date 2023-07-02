@@ -4,7 +4,16 @@ import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Streamer} from "./entities/streamer.entity";
 import {Repository} from "typeorm";
-import {GetOneStreamerFullData, GetStreamersData, OneStreamerData, UpdatedStreamerData} from "../types";
+import {
+    GetOneStreamerFullData,
+    GetStreamersData,
+    MulterDiskUploadedFiles,
+    OneStreamerData,
+    UpdatedStreamerData
+} from "../types";
+import fs from "fs/promises";
+import path from "path";
+import {storageDir} from "../../utils/storage";
 
 @Injectable()
 export class StreamersService {
@@ -18,18 +27,36 @@ export class StreamersService {
         return {id, username, upVotes, downVotes, platform};
     }
 
-    async create(req: CreateStreamerDto): Promise<GetStreamersData | BadRequestException> {
+    async create(req: CreateStreamerDto, file: MulterDiskUploadedFiles): Promise<GetStreamersData | BadRequestException> {
         const existingStreamer = await this.streamersRepository.findOneBy({username: req.username})
+        const uploadedImage = file?.image?.[0] ?? null;
+        const deleteUploadedImage = async (filename: string) => {
+            try {
+                await fs.unlink(path.join(storageDir(), "streamer-images", filename));
+            } catch (imageDeleteError) {
+                console.error(imageDeleteError);
+            }
+        };
+
         if (existingStreamer) {
+            uploadedImage ? await deleteUploadedImage(uploadedImage.filename) : null;
             throw new BadRequestException({
                 message: `${existingStreamer.username} is already created on site`,
                 existingStreamer: existingStreamer.id
             });
         }
-        const streamer = this.streamersRepository.create(req);
-        await this.streamersRepository.save(streamer);
-        const {imageFn, description, ...streamerData} = streamer;
-        return streamerData;
+        try {
+            const streamer = this.streamersRepository.create(req);
+            if (uploadedImage) {
+                streamer.imageFn = uploadedImage.filename;
+            }
+            await this.streamersRepository.save(streamer);
+            const {imageFn, description, ...streamerData} = streamer;
+            return streamerData;
+        } catch (error) {
+            await deleteUploadedImage(uploadedImage.filename);
+            throw error;
+        }
     }
 
     async findAll(): Promise<GetStreamersData[] | NotFoundException> {
