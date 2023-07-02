@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, HttpStatus, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -94,24 +94,28 @@ export class StreamersService {
 
     async getImage(id: string, res: any) {
         try {
-            const streamerData = await this.streamersRepository.findOneBy({id});
+            const streamerData = await this.streamersRepository.findOneBy({ id });
             if (!streamerData) {
-                throw new NotFoundException("There was no streamer with given id!");
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: "There was no streamer with the given id!",
+                    status: 404,
+                });
             }
-            if (!streamerData.imageFn) {
-                throw new NotFoundException({
-                    message: "No image was uploaded to this streamer entity!"
+            if (streamerData.imageFn == null) {
+                return res.status(HttpStatus.NOT_FOUND).json({
+                    message: "No image was uploaded to this streamer entity!",
+                    status: 404,
                 });
             }
             res.sendFile(streamerData.imageFn, {
-                root: path.join(storageDir(), "streamer-images")
+                root: path.join(storageDir(), "streamer-images"),
             });
         } catch (err) {
-            res.json({
-                    error: err.message
-                }
-            );
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: err.message,
+            });
         }
     }
 }
+
 
