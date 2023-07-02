@@ -1,30 +1,5 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Streamer Spotlight API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
@@ -45,29 +20,127 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
+## For endpoint UI after running program visit http://localhost:3000/api 
 
-```bash
-# unit tests
-$ yarn run test
+The streamer spotlight API description
 
-# e2e tests
-$ yarn run test:e2e
+## /streamers
 
-# test coverage
-$ yarn run test:cov
-```
+### POST /streamers
 
-## Support
+- **Operation ID:** StreamersController_create
+- **Parameters:** None
+- **Request Body:**
+  - **Required:** true
+  - **Content-Type:** multipart/form-data
+  - **Body Schema:**
+    ```yaml
+    type: object
+    properties:
+      username:
+        type: string
+      platform:
+        type: string
+        enum:
+          - YouTube
+          - Twitch
+          - TikTok
+          - Rumble
+          - Kick
+      description:
+        type: string
+      imageFn:
+        type: string
+        format: binary
+    ```
+- **Responses:**
+  - **201:**
+    - **Description:**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### GET /streamers
 
-## Stay in touch
+- **Operation ID:** StreamersController_findAll
+- **Parameters:** None
+- **Responses:**
+  - **200:**
+    - **Description:**
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## /streamers/{id}
 
-## License
+### GET /streamers/{id}
 
-Nest is [MIT licensed](LICENSE).
+- **Operation ID:** StreamersController_findOne
+- **Parameters:**
+  - **Name:** id
+    - **Required:** true
+    - **In:** path
+    - **Schema:**
+      ```yaml
+      type: string
+      ```
+- **Responses:**
+  - **200:**
+    - **Description:**
+
+## /streamers/{id}/vote
+
+### PUT /streamers/{id}/vote
+
+- **Operation ID:** StreamersController_update
+- **Parameters:**
+  - **Name:** id
+    - **Required:** true
+    - **In:** path
+    - **Schema:**
+      ```yaml
+      type: string
+      ```
+- **Request Body:**
+  - **Required:** true
+  - **Content-Type:** application/json
+  - **Body Schema:**
+    ```yaml
+    $ref: '#/components/schemas/UpdateStreamerDto'
+    ```
+- **Responses:**
+  - **200:**
+    - **Description:**
+
+## /streamers/image/{id}
+
+### GET /streamers/image/{id}
+
+- **Operation ID:** StreamersController_getImage
+- **Parameters:**
+  - **Name:** id
+    - **Required:** true
+    - **In:** path
+    - **Schema:**
+      ```yaml
+      type: string
+      ```
+- **Responses:**
+  - **200:**
+    - **Description:**
+
+## Components
+
+### Schemas
+
+#### UpdateStreamerDto
+
+- **Type:** object
+- **Properties:**
+  - **upVotes:**
+    - **Type:** number
+    - **Description:** Update up votes count for content creator
+    - **Example:** '1'
+  - **downVotes:**
+    - **Type:** number
+    - **Description:** Update down votes count for content creator
+    - **Example:** '-1'
+- **Required:**
+  - upVotes
+  - downVotes
+
+
