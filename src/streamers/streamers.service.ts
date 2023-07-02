@@ -23,4 +23,8 @@ export class StreamersService {
   remove(id: number) {
     return `This action removes a #${id} streamer`;
   }
+
+    getImage(id: string, res: any) {
+        
+    }
 }
