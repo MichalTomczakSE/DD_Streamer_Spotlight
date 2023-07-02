@@ -1,4 +1,5 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Platform} from "../../types";
 
 @Entity()
 export class Streamer {
@@ -18,7 +19,7 @@ export class Streamer {
         length: 7,
         nullable: false
     })
-    platform: string;
+    platform: Platform;
 
 
     @Column({
