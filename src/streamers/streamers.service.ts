@@ -35,8 +35,12 @@ export class StreamersService {
         return streamers;
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} streamer`;
+    async findOne(id: string): Promise<GetStreamerData | NotFoundException> {
+        const streamer = await this.streamersRepository.findOneBy({id});
+        if (!streamer) {
+            throw new NotFoundException(`Sorry, Streamer with ID ${id} is not found in the repository`);
+        }
+        return streamer;
     }
 
     update(id: number, updateStreamerDto: UpdateStreamerDto) {
