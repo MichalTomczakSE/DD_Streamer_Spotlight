@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -27,8 +27,12 @@ export class StreamersService {
         return streamerData;
     }
 
-    findAll() {
-        return `This action returns all streamers`;
+    async findAll(): Promise<GetStreamersData[] | NotFoundException> {
+        const streamers = await this.streamersRepository.find();
+        if (streamers.length == 0) {
+            throw new NotFoundException(`Streamers not found, please add some streamers to the repository`);
+        }
+        return streamers;
     }
 
     findOne(id: number) {
