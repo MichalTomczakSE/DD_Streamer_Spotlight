@@ -13,7 +13,7 @@ import {
 } from "../types";
 import fs from "fs/promises";
 import path from "path";
-import {storageDir} from "../../utils/storage";
+import {storageDir} from "../utils/storage";
 
 @Injectable()
 export class StreamersService {

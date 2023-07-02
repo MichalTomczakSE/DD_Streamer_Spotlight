@@ -8,15 +8,17 @@ import {
     Res,
     ParseUUIDPipe,
     BadRequestException,
-    NotFoundException, UseInterceptors, UploadedFiles
+    NotFoundException, UploadedFiles
 } from '@nestjs/common';
 import {StreamersService} from './streamers.service';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
 import {UpdateStreamerDto} from './dto/update-streamer.dto';
 import {GetStreamersData, MulterDiskUploadedFiles, OneStreamerData, UpdatedStreamerData} from "../types";
 import {ApiImage} from "../../decorators/api-image-decorator";
+import {ApiTags} from "@nestjs/swagger";
 
 @Controller('streamers')
+@ApiTags("streamers")
 export class StreamersController {
     constructor(private readonly streamersService: StreamersService) {
     }
