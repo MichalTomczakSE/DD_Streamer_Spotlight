@@ -8,7 +8,7 @@ import {
     Res,
     ParseUUIDPipe,
     BadRequestException,
-    NotFoundException, UseInterceptors, UploadedFiles
+    NotFoundException, UploadedFiles
 } from '@nestjs/common';
 import {StreamersService} from './streamers.service';
 import {CreateStreamerDto} from './dto/create-streamer.dto';
