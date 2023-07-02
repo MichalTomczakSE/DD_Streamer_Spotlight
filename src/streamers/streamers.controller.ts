@@ -20,7 +20,7 @@ export class StreamersController {
     constructor(private readonly streamersService: StreamersService) {
     }
 
-    @Post('/')
+    @Post()
     create(@Body() req: CreateStreamerDto): Promise<GetStreamersData | BadRequestException> {
         return this.streamersService.create(req)
     }
