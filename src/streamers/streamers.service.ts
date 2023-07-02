@@ -92,7 +92,26 @@ export class StreamersService {
     }
 
 
-    getImage(id: string, res: any) {
-
+    async getImage(id: string, res: any) {
+        try {
+            const streamerData = await this.streamersRepository.findOneBy({id});
+            if (!streamerData) {
+                throw new NotFoundException("There was no streamer with given id!");
+            }
+            if (!streamerData.imageFn) {
+                throw new NotFoundException({
+                    message: "No image was uploaded to this streamer entity!"
+                });
+            }
+            res.sendFile(streamerData.imageFn, {
+                root: path.join(storageDir(), "streamer-images")
+            });
+        } catch (err) {
+            res.json({
+                    error: err.message
+                }
+            );
+        }
     }
 }
+
