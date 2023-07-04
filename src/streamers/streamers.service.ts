@@ -41,6 +41,7 @@ export class StreamersService {
         if (existingStreamer) {
             uploadedImage ? await deleteUploadedImage(uploadedImage.filename) : null;
             throw new BadRequestException({
+                statusCode: 400,
                 message: `${existingStreamer.username} is already created on site`,
                 existingStreamer: existingStreamer.id
             });
@@ -91,28 +92,37 @@ export class StreamersService {
         return updatedStreamerData;
     }
 
-
     async getImage(id: string, res: any) {
         try {
-            const streamerData = await this.streamersRepository.findOneBy({ id });
+            const streamerData = await this.streamersRepository.findOneBy({id});
             if (!streamerData) {
-                return res.status(HttpStatus.BAD_REQUEST).json({
+                return res.status(HttpStatus.NOT_FOUND).json({
                     message: "There was no streamer with the given id!",
                     status: 404,
                 });
             }
             if (streamerData.imageFn == null) {
-                return res.status(HttpStatus.NOT_FOUND).json({
-                    message: "No image was uploaded to this streamer entity!",
-                    status: 404,
-                });
+                try {
+                    res.sendFile('default_photo.png', {
+                        root: path.join(storageDir(), "streamer-images"),
+                    });
+                    return;
+                } catch (err) {
+                    res.status(HttpStatus.NOT_IMPLEMENTED).json({
+                        error: err.message
+                    })
+                }
             }
+
             res.sendFile(streamerData.imageFn, {
                 root: path.join(storageDir(), "streamer-images"),
             });
         } catch (err) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: err.message,
+            res.status(HttpStatus.SERVICE_UNAVAILABLE).json({
+                error: {
+                    error: err.message,
+                    message: 'Please try again later!'
+                }
             });
         }
     }
