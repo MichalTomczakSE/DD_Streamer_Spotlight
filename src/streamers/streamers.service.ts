@@ -43,7 +43,7 @@ export class StreamersService {
             throw new BadRequestException({
                 statusCode: 400,
                 message: `${existingStreamer.username} is already created on site`,
-                existingStreamer: existingStreamer.id
+                id: existingStreamer.id
             });
         }
         try {
