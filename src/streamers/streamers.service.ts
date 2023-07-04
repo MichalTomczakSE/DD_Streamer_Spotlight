@@ -83,9 +83,9 @@ export class StreamersService {
         }
         const {upVotes, downVotes} = req;
         if (upVotes) {
-            streamer.upVotes += upVotes;
+            streamer.upVotes += Math.sign(upVotes)
         } else if (downVotes) {
-            streamer.downVotes += downVotes;
+            streamer.downVotes += Math.sign(downVotes)
         }
         await this.streamersRepository.save(streamer);
         const {username, platform, description, imageFn, ...updatedStreamerData} = streamer;
