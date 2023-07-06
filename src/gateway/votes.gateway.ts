@@ -1,14 +1,7 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { StreamersService } from "../streamers/streamers.service";
-import { UpdateStreamerDto } from "../streamers/dto/update-streamer.dto";
+import {MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
+import {StreamersService} from "../streamers/streamers.service";
 import {Server} from "socket.io";
-import {GetStreamersData} from "../types";
-import {OnModuleInit} from "@nestjs/common";
 
-interface WebSocketVoteBody {
-    id: string;
-    vote: UpdateStreamerDto;
-}
 
 @WebSocketGateway({
     cors:
@@ -16,19 +9,21 @@ interface WebSocketVoteBody {
             origin: "*"
         }
 })
-export class VotesGateway implements OnModuleInit{
+export class VotesGateway {
     constructor(private readonly streamersService: StreamersService) {
     }
 
     @WebSocketServer()
     server: Server;
 
-    onModuleInit() {
-        this.server.on("connection", socket => console.log(socket.id, "connected"));
-    }
+
     @SubscribeMessage("newVote")
-    async onNewVote(@MessageBody() body: WebSocketVoteBody): Promise<GetStreamersData> {
-        this.server.emit("onVote", await this.streamersService.update(body.id, body.vote));
-        return await this.streamersService.findOne(body.id);
+    async onNewVote(@MessageBody() id: string) {
+        this.server.emit("onVote", await this.streamersService.findOne(id));
+    }
+
+    @SubscribeMessage("newStreamer")
+    async onNewStreamer(@MessageBody() username: string) {
+        this.server.emit("onCreate", await this.streamersService.findOneByUsername(username));
     }
 }
