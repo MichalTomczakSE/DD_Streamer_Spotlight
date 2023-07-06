@@ -1,8 +1,6 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { StreamersService } from "../streamers/streamers.service";
+import {MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
+import {StreamersService} from "../streamers/streamers.service";
 import {Server} from "socket.io";
-
-
 
 
 @WebSocketGateway({
@@ -24,4 +22,8 @@ export class VotesGateway {
         this.server.emit("onVote", await this.streamersService.findOne(id));
     }
 
+    @SubscribeMessage("newStreamer")
+    async onNewStreamer(@MessageBody() username: string) {
+        this.server.emit("onCreate", await this.streamersService.findOneByUsername(username));
+    }
 }
