@@ -27,6 +27,11 @@ export class StreamersService {
         return {id, username, upVotes, downVotes, platform};
     }
 
+    async findOneByUsername(username: string): Promise<GetStreamersData> {
+        const streamer = await this.streamersRepository.findOneBy({username});
+        return this.filter(streamer);
+    }
+
     async create(req: CreateStreamerDto, file: MulterDiskUploadedFiles): Promise<GetStreamersData | BadRequestException> {
         const existingStreamer = await this.streamersRepository.findOneBy({username: req.username})
         const uploadedImage = file?.image?.[0] ?? null;
